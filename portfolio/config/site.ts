@@ -11,15 +11,15 @@ export const siteConfig = {
         },
         {
             label: "Experience",
-            href: "/docs",
+            href: "#experence",
         },
         {
             label: "Projects",
-            href: "/pricing",
+            href: "#projects",
         },
         {
             label: "Contact",
-            href: "/blog",
+            href: "#contact-me",
         },
     ],
     projects: [
