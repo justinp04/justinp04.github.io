@@ -6,6 +6,7 @@ import { button as buttonStyles } from "@heroui/theme";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
+import Info from "@/components/about/info";
 
 export default function Home() {
     return (
@@ -43,6 +44,16 @@ export default function Home() {
                     GitHub
                 </Link>
             </div>
+
+            <div id="About" className="w-10/12">
+                <Info />
+            </div>
+
+            <div id="Experience" className="w-10/12"></div>
+
+            <div id="Projects" className="w-10/12"></div>
+
+            <div id="Cotact me" className="w-10/12"></div>
         </section>
     );
 }

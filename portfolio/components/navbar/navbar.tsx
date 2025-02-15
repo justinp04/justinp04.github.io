@@ -10,6 +10,7 @@ import {
 import { Button } from "@heroui/button";
 import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
+import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
@@ -39,6 +40,7 @@ export const Navbar = () => {
                         <p className="font-bold text-inherit">Justin Pan</p>
                     </NextLink>
                 </NavbarBrand>
+                <Divider orientation="vertical" className="h-3/6" />
                 <ul className="hidden lg:flex gap-4 justify-start ml-2">
                     {siteConfig.navItems.map((item) => (
                         <NavbarItem key={item.href}>
@@ -56,7 +58,6 @@ export const Navbar = () => {
                     ))}
                 </ul>
             </NavbarContent>
-
             <NavbarContent
                 className="hidden sm:flex basis-1/5 sm:basis-full"
                 justify="end"
