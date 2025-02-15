@@ -29,7 +29,7 @@ export default function Home() {
                         radius: "full",
                         variant: "shadow",
                     })}
-                    href={siteConfig.links.docs}
+                    href={siteConfig.links.linkedIn} // Update this link
                 >
                     Download My Resume
                 </Link>
