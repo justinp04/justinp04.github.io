@@ -18,6 +18,7 @@ import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, LinkedInIcon, SearchIcon, Logo } from "@/components/icons";
+import Image from "next/image";
 
 export const Navbar = () => {
     return (
@@ -29,7 +30,12 @@ export const Navbar = () => {
                         className="flex justify-start items-center gap-1"
                         href="/"
                     >
-                        <Logo />
+                        <Image
+                            src="/icon.png"
+                            alt="Icon"
+                            width={36}
+                            height={36}
+                        />
                         <p className="font-bold text-inherit">Justin Pan</p>
                     </NextLink>
                 </NavbarBrand>

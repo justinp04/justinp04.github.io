@@ -12,9 +12,7 @@ export default function Home() {
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
             <div className="inline-block max-w-xl text-center justify-center">
                 <span className={title()}>Hi, I'm&nbsp;</span>
-                <span className={title({ color: "violet" })}>
-                    Justin Pan &nbsp;
-                </span>
+                <span className={title({ color: "violet" })}>Justin Pan</span>
                 <br />
                 <span className={title()}>
                     your next Full-Stack Software Engineer.
