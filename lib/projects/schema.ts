@@ -1,5 +1,16 @@
 import { z } from "zod";
 
+const httpsProjectLinkSchema = z.string().url().refine(
+  (href) => {
+    try {
+      return new URL(href).protocol === "https:";
+    } catch {
+      return false;
+    }
+  },
+  { message: "Project link href must use HTTPS" },
+);
+
 export const projectMetadataSchema = z.object({
   slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   name: z.string().min(1),
@@ -10,7 +21,7 @@ export const projectMetadataSchema = z.object({
   featuredOrder: z.number().int().positive(),
   tags: z.array(z.string().min(1)).min(1),
   links: z
-    .array(z.object({ label: z.string().min(1), href: z.string().url() }))
+    .array(z.object({ label: z.string().min(1), href: httpsProjectLinkSchema }))
     .default([]),
 });
 

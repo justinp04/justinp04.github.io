@@ -11,7 +11,7 @@ export function ProjectMediaPlaceholder({
       className="project-media-placeholder"
       data-project-media-placeholder
     >
-      {/* Future asset: public/images/projects/chasecrm/product-overview.webp. Replace this placeholder and add specific, meaningful alt text when the sanitized product image is available. */}
+      {/* Future asset: public/projects/<slug>/product-overview.webp. Replace this placeholder and add specific, meaningful alt text when the project-safe image is available. */}
       <div className="project-media-grid" />
       <p className="project-media-label">
         <span>{projectName}</span>

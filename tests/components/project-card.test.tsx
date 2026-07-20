@@ -39,12 +39,25 @@ const seanDunnRealEstateProject = {
 } satisfies ProjectRecord;
 
 describe("ProjectCard", () => {
-  it("presents ChaseCRM evidence and a descriptive case-study link", () => {
+  it("uses a level-three heading by default beneath a section heading", () => {
     render(<ProjectCard emphasis="primary" project={chasecrmProject} />);
 
     expect(
       screen.getByRole("heading", { level: 3, name: "ChaseCRM" }),
     ).toBeInTheDocument();
+  });
+
+  it("uses an explicit level-two heading in the Project Index", () => {
+    render(<ProjectCard headingLevel={2} project={chasecrmProject} />);
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "ChaseCRM" }),
+    ).toBeInTheDocument();
+  });
+
+  it("presents ChaseCRM evidence and a descriptive case-study link", () => {
+    render(<ProjectCard emphasis="primary" project={chasecrmProject} />);
+
     expect(screen.getByText("Limited access")).toBeInTheDocument();
     expect(
       screen.getByText("Independently created and entirely owned as sole developer"),

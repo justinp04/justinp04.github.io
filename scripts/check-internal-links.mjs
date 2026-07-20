@@ -1,4 +1,4 @@
-import { readFile, readdir, realpath, stat } from "node:fs/promises";
+import { lstat, readFile, readdir, realpath, stat } from "node:fs/promises";
 import path from "node:path";
 
 const RESUME_PATH = "/justin-pan-resume.pdf";
@@ -55,6 +55,23 @@ async function canonicalExistingFile(target) {
   }
 }
 
+async function targetExists(target) {
+  try {
+    await lstat(target);
+    return true;
+  } catch (error) {
+    if (
+      error &&
+      typeof error === "object" &&
+      ["ENOENT", "ENOTDIR"].includes(error.code)
+    ) {
+      return false;
+    }
+
+    throw error;
+  }
+}
+
 for (const htmlFile of await collectHtmlFiles(exportRoot)) {
   const html = await readFile(htmlFile, "utf8");
 
@@ -66,11 +83,6 @@ for (const htmlFile of await collectHtmlFiles(exportRoot)) {
     }
 
     const normalizedHref = href.split(/[?#]/, 1)[0];
-
-    if (normalizedHref === RESUME_PATH) {
-      encounteredResume = true;
-      continue;
-    }
 
     const resolvedTarget =
       normalizedHref === ""
@@ -92,6 +104,14 @@ for (const htmlFile of await collectHtmlFiles(exportRoot)) {
     const canonicalTarget = await canonicalExistingFile(target);
 
     if (!canonicalTarget) {
+      if (
+        normalizedHref === RESUME_PATH &&
+        !(await targetExists(target))
+      ) {
+        encounteredResume = true;
+        continue;
+      }
+
       failures.push(`${path.relative(exportRoot, htmlFile)}: missing target ${href}`);
       continue;
     }

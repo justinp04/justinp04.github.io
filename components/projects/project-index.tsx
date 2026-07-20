@@ -25,6 +25,7 @@ export function ProjectIndex({ projects }: ProjectIndexProps) {
         {projects.map((project, index) => (
           <ProjectCard
             emphasis={index === 0 ? "primary" : "standard"}
+            headingLevel={2}
             key={project.slug}
             project={project}
           />

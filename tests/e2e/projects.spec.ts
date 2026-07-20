@@ -38,7 +38,7 @@ test("publishes all three projects in the Project Index in order", async ({
   await expect(
     page.getByRole("heading", { level: 1, name: "Project Index" }),
   ).toBeVisible();
-  await expect(page.getByRole("heading", { level: 3 })).toHaveText([
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText([
     "ChaseCRM",
     "MacroMunch",
     "Sean Dunn Real Estate",

@@ -4,12 +4,16 @@ import { cn } from "@/lib/utils";
 interface ProjectCardProps {
   project: ProjectRecord;
   emphasis?: "primary" | "standard";
+  headingLevel?: 2 | 3;
 }
 
 export function ProjectCard({
   project,
   emphasis = "standard",
+  headingLevel = 3,
 }: ProjectCardProps) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
+
   return (
     <article
       className={cn(
@@ -24,9 +28,9 @@ export function ProjectCard({
         </span>
         <span className="text-muted">{project.timeframe}</span>
       </div>
-      <h3 className="mt-6 text-3xl font-semibold tracking-tight">
+      <Heading className="mt-6 text-3xl font-semibold tracking-tight">
         {project.name}
-      </h3>
+      </Heading>
       <p className="mt-4 max-w-2xl text-base leading-7 text-muted">
         {project.description}
       </p>

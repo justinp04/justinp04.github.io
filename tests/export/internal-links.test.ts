@@ -226,4 +226,35 @@ describe("internal link checker", () => {
     expect(result.stderr).toBe("");
     expect(result.stdout.trim().split("\n")).toEqual([warning]);
   });
+
+  test("validates a present résumé target without printing the absence warning", async () => {
+    const root = await createFixture({
+      "index.html": '<a href="/justin-pan-resume.pdf">Résumé</a>',
+      "justin-pan-resume.pdf": "fixture résumé",
+    });
+
+    const result = runChecker(root);
+
+    expect(result).toEqual({ exitCode: 0, stderr: "", stdout: "" });
+  });
+
+  test("rejects a present résumé symlink that escapes the export root", async () => {
+    const root = await createFixture({
+      "index.html": '<a href="/justin-pan-resume.pdf">Résumé</a>',
+    });
+    const outsideFile = path.join(
+      path.dirname(root),
+      `${path.basename(root)}-outside-resume.pdf`,
+    );
+    fixtures.push(outsideFile);
+    await writeFile(outsideFile, "private résumé");
+    await symlink(outsideFile, path.join(root, "justin-pan-resume.pdf"));
+
+    const result = runChecker(root);
+
+    expect(result.exitCode).not.toBe(0);
+    expect(result.stderr).toContain("outside export root");
+    expect(result.stderr).toContain("justin-pan-resume.pdf");
+    expect(result.stdout).not.toContain("intentionally absent");
+  });
 });

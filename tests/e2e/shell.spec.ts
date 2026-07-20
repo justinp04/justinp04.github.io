@@ -210,3 +210,20 @@ test("mobile navigation removes Sheet motion when reduced motion is requested", 
     "Sheet overlay",
   );
 });
+
+test("the focused skip link becomes visible without motion when reduced motion is requested", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+
+  const skipLink = page.getByRole("link", { name: "Skip to main content" });
+  await skipLink.focus();
+
+  await expect(skipLink).toBeFocused();
+  await expect(skipLink).toBeVisible();
+  await expect
+    .poll(async () => (await skipLink.boundingBox())?.y)
+    .toBeGreaterThanOrEqual(0);
+  await expectNoNonessentialMotion(skipLink, "focused skip link");
+});

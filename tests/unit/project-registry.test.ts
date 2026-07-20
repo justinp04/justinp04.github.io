@@ -61,6 +61,40 @@ describe("project registry", () => {
     ).toThrow("Duplicate project slug: chasecrm");
   });
 
+  it.each([
+    "javascript:alert('unsafe')",
+    "data:text/html,<script>alert('unsafe')</script>",
+    "file:///tmp/private-project.html",
+  ])("rejects a non-HTTPS project link: %s", (href) => {
+    expect(() =>
+      buildProjectRegistry([
+        {
+          metadata: {
+            ...chasecrmMetadata,
+            links: [{ label: "Unsafe project link", href }],
+          },
+          Body,
+        },
+      ]),
+    ).toThrow("Project link href must use HTTPS");
+  });
+
+  it("accepts an HTTPS project link", () => {
+    const href = "https://example.com/project";
+
+    const registry = buildProjectRegistry([
+      {
+        metadata: {
+          ...chasecrmMetadata,
+          links: [{ label: "Visit project", href }],
+        },
+        Body,
+      },
+    ]);
+
+    expect(registry[0]?.links).toEqual([{ label: "Visit project", href }]);
+  });
+
   it("sorts lower featured orders first without mutating its input", () => {
     const sources = [
       {
