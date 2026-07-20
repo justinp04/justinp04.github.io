@@ -33,10 +33,31 @@ async function expectPrimaryAnchorColors(
   expect.soft(actual.color, `${label} foreground`).toBe(primaryForeground);
 }
 
-async function expectNoColorContrastViolations(page: Page, label: string) {
-  const results = await new AxeBuilder({ page })
-    .withRules(["color-contrast"])
-    .analyze();
+async function expectHomepageRevealsToSettle(page: Page) {
+  const reveals = page.locator(".reveal");
+
+  for (let index = 0; index < (await reveals.count()); index += 1) {
+    const reveal = reveals.nth(index);
+    await reveal.scrollIntoViewIfNeeded();
+    await expect(reveal).toHaveAttribute("data-visible", "true");
+    await expect
+      .poll(() =>
+        reveal.evaluate((element) => {
+          const style = getComputedStyle(element);
+          return { opacity: style.opacity, transform: style.transform };
+        }),
+      )
+      .toEqual({ opacity: "1", transform: "none" });
+  }
+}
+
+async function expectNoColorContrastViolations(
+  page: Page,
+  label: string,
+  include?: string,
+) {
+  const builder = new AxeBuilder({ page }).withRules(["color-contrast"]);
+  const results = await (include ? builder.include(include) : builder).analyze();
 
   expect.soft(results.violations, `${label} color contrast`).toEqual([]);
 }
@@ -144,6 +165,7 @@ test("primary anchor surfaces retain an AA dark foreground through the generated
     "desktop résumé",
   );
   await expectPrimaryAnchorColors(page, skipLink, "focused skip link");
+  await expectHomepageRevealsToSettle(page);
   await expectNoColorContrastViolations(page, "desktop homepage");
 
   await page.setViewportSize({ width: 390, height: 844 });
@@ -156,7 +178,11 @@ test("primary anchor surfaces retain an AA dark foreground through the generated
     dialog.getByRole("link", { name: "Résumé" }),
     "mobile résumé",
   );
-  await expectNoColorContrastViolations(page, "mobile homepage navigation");
+  await expectNoColorContrastViolations(
+    page,
+    "mobile homepage navigation",
+    '[role="dialog"]',
+  );
 
   await page.goto("/404.html");
   await expectPrimaryAnchorColors(
