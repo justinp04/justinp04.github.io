@@ -5,6 +5,10 @@ vi.mock("@/content/projects/chasecrm/body.mdx", () => ({
   default: () => null,
 }));
 
+vi.mock("@/content/projects/macromunch/body.mdx", () => ({
+  default: () => null,
+}));
+
 import {
   buildProjectRegistry,
   getProjectBySlug,
@@ -71,12 +75,16 @@ describe("project registry", () => {
     ]);
   });
 
-  it("returns a matching project and leaves unknown slugs unresolved", () => {
-    expect(projects).toContainEqual(
-      expect.objectContaining({ slug: "chasecrm", name: "ChaseCRM" }),
-    );
+  it("publishes the known projects in featured order", () => {
+    expect(projects.map(({ slug }) => slug)).toEqual([
+      "chasecrm",
+      "macromunch",
+    ]);
     expect(getProjectBySlug("chasecrm")).toEqual(
       expect.objectContaining({ slug: "chasecrm", name: "ChaseCRM" }),
+    );
+    expect(getProjectBySlug("macromunch")).toEqual(
+      expect.objectContaining({ slug: "macromunch", name: "MacroMunch" }),
     );
     expect(getProjectBySlug("unknown-project")).toBeUndefined();
   });
