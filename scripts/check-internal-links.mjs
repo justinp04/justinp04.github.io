@@ -1,4 +1,4 @@
-import { readFile, readdir, stat } from "node:fs/promises";
+import { readFile, readdir, realpath, stat } from "node:fs/promises";
 import path from "node:path";
 
 const RESUME_PATH = "/justin-pan-resume.pdf";
@@ -6,6 +6,7 @@ const RESUME_WARNING =
   "WARNING: /justin-pan-resume.pdf is intentionally absent until Justin supplies the updated résumé.";
 
 const exportRoot = path.resolve(process.argv[2] ?? "out");
+const canonicalExportRoot = await realpath(exportRoot);
 const failures = [];
 let encounteredResume = false;
 
@@ -26,12 +27,28 @@ async function collectHtmlFiles(directory) {
   return files.flat();
 }
 
-async function targetExists(target) {
+function isOutsideRoot(root, target) {
+  const relativeTarget = path.relative(root, target);
+
+  return (
+    relativeTarget === ".." ||
+    relativeTarget.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relativeTarget)
+  );
+}
+
+async function canonicalExistingFile(target) {
   try {
-    return (await stat(target)).isFile();
+    const canonicalTarget = await realpath(target);
+
+    return (await stat(canonicalTarget)).isFile() ? canonicalTarget : undefined;
   } catch (error) {
-    if (error && typeof error === "object" && error.code === "ENOENT") {
-      return false;
+    if (
+      error &&
+      typeof error === "object" &&
+      ["ELOOP", "ENOENT", "ENOTDIR"].includes(error.code)
+    ) {
+      return undefined;
     }
 
     throw error;
@@ -55,27 +72,34 @@ for (const htmlFile of await collectHtmlFiles(exportRoot)) {
       continue;
     }
 
-    const resolvedTarget = normalizedHref.startsWith("/")
-      ? path.resolve(exportRoot, `.${normalizedHref}`)
-      : path.resolve(path.dirname(htmlFile), normalizedHref);
+    const resolvedTarget =
+      normalizedHref === ""
+        ? htmlFile
+        : normalizedHref.startsWith("/")
+          ? path.resolve(exportRoot, `.${normalizedHref}`)
+          : path.resolve(path.dirname(htmlFile), normalizedHref);
     const target = normalizedHref.endsWith("/")
       ? path.join(resolvedTarget, "index.html")
       : resolvedTarget;
-    const relativeTarget = path.relative(exportRoot, target);
 
-    if (
-      relativeTarget === ".." ||
-      relativeTarget.startsWith(`..${path.sep}`) ||
-      path.isAbsolute(relativeTarget)
-    ) {
+    if (isOutsideRoot(exportRoot, target)) {
       failures.push(
         `${path.relative(exportRoot, htmlFile)}: target outside export root ${href}`,
       );
       continue;
     }
 
-    if (!(await targetExists(target))) {
+    const canonicalTarget = await canonicalExistingFile(target);
+
+    if (!canonicalTarget) {
       failures.push(`${path.relative(exportRoot, htmlFile)}: missing target ${href}`);
+      continue;
+    }
+
+    if (isOutsideRoot(canonicalExportRoot, canonicalTarget)) {
+      failures.push(
+        `${path.relative(exportRoot, htmlFile)}: target outside export root ${href}`,
+      );
     }
   }
 }

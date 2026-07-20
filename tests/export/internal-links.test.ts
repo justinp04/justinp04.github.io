@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -84,6 +84,19 @@ describe("internal link checker", () => {
     expect(result).toEqual({ exitCode: 0, stderr: "", stdout: "" });
   });
 
+  test("resolves query-only hrefs to the current HTML document", async () => {
+    const root = await createFixture({
+      "index.html": `
+        <a href="?source=portfolio">Query</a>
+        <a href="?source=portfolio#contact">Query and hash</a>
+      `,
+    });
+
+    const result = runChecker(root);
+
+    expect(result).toEqual({ exitCode: 0, stderr: "", stdout: "" });
+  });
+
   test("ignores external, contact, telephone, and fragment-only hrefs", async () => {
     const root = await createFixture({
       "index.html": `
@@ -137,6 +150,46 @@ describe("internal link checker", () => {
     expect(result.exitCode).not.toBe(0);
     expect(result.stderr).toContain("outside export root");
     expect(result.stderr).toContain(path.basename(outsideFile));
+  });
+
+  test("rejects an in-root symlink to an existing target outside the export root", async () => {
+    const root = await createFixture({
+      "index.html": `
+        <a href="valid.html">Valid</a>
+        <a href="/escape.txt">Escape</a>
+      `,
+      "valid.html": "<h1>Valid</h1>",
+    });
+    const outsideFile = path.join(
+      path.dirname(root),
+      `${path.basename(root)}-outside.txt`,
+    );
+    fixtures.push(outsideFile);
+    await writeFile(outsideFile, "secret");
+    await symlink(outsideFile, path.join(root, "escape.txt"));
+
+    const result = runChecker(root);
+
+    expect(result.exitCode).not.toBe(0);
+    expect(result.stderr).toContain("outside export root");
+    expect(result.stderr).toContain("escape.txt");
+    expect(result.stderr).not.toContain("valid.html");
+  });
+
+  test("reports a broken in-root symlink as a missing target", async () => {
+    const root = await createFixture({
+      "index.html": '<a href="broken.txt">Broken</a>',
+    });
+    await symlink(
+      path.join(path.dirname(root), `${path.basename(root)}-missing.txt`),
+      path.join(root, "broken.txt"),
+    );
+
+    const result = runChecker(root);
+
+    expect(result.exitCode).not.toBe(0);
+    expect(result.stderr).toContain("missing target broken.txt");
+    expect(result.stderr).not.toContain("ENOENT");
   });
 
   test("aggregates every missing target before exiting", async () => {
