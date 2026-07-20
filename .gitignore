@@ -9,12 +9,15 @@
 /coverage/
 /playwright-report/
 /test-results/
+/.lighthouseci/
 
 # Local environment and platform state
 .env*
 !.env.example
 /.netlify/
+/.vercel/
 .DS_Store
+Thumbs.db
 *.pem
 
 # Logs and generated TypeScript state
@@ -22,6 +25,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.log
 *.tsbuildinfo
 next-env.d.ts
 
