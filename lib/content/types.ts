@@ -9,3 +9,16 @@ export interface ProfessionalProfiles {
   linkedin: string;
   resume: string;
 }
+
+export interface HeroContent {
+  eyebrow: string;
+  heading: string;
+  summary: string;
+  primaryAction: NavigationItem;
+  secondaryAction: NavigationItem;
+}
+
+export interface ProofPoint {
+  value: string;
+  label: string;
+}
