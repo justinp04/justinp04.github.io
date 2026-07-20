@@ -36,7 +36,8 @@ describe("project registry", () => {
   });
 
   it("rejects a source missing its name", () => {
-    const { name: _name, ...missingName } = chasecrmMetadata;
+    const missingName: Partial<ProjectMetadata> = { ...chasecrmMetadata };
+    delete missingName.name;
 
     expect(() =>
       buildProjectRegistry([{ metadata: missingName, Body }]),

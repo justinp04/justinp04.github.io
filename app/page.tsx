@@ -2,6 +2,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { AboutSummary } from "@/components/sections/about-summary";
 import { ContactPanel } from "@/components/sections/contact-panel";
 import { ExperienceTimeline } from "@/components/sections/experience-timeline";
+import { FeaturedProjects } from "@/components/sections/featured-projects";
 import { Hero } from "@/components/sections/hero";
 import { ProofPoints } from "@/components/sections/proof-points";
 import {
@@ -12,6 +13,7 @@ import {
   profiles,
   proofPoints,
 } from "@/content/site";
+import { featuredProjects } from "@/lib/projects/registry";
 
 export default function Home() {
   return (
@@ -25,7 +27,9 @@ export default function Home() {
       <Reveal>
         <ProofPoints items={proofPoints} />
       </Reveal>
-      <div aria-hidden="true" data-featured-projects-boundary="pending-pm-03" />
+      <Reveal>
+        <FeaturedProjects projects={featuredProjects} />
+      </Reveal>
       <Reveal>
         <ExperienceTimeline entries={experienceEntries} />
       </Reveal>

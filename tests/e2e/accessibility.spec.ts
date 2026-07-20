@@ -31,3 +31,27 @@ test("homepage has no WCAG A or AA accessibility violations", async ({ page }) =
 
   expect(results.violations).toEqual([]);
 });
+
+for (const route of [
+  { path: "/projects/", heading: "Project Index", label: "Project Index" },
+  {
+    path: "/projects/chasecrm/",
+    heading: "ChaseCRM",
+    label: "ChaseCRM Project Case Study",
+  },
+]) {
+  test(`${route.label} has no WCAG A or AA accessibility violations`, async ({
+    page,
+  }) => {
+    await page.goto(route.path);
+    await expect(
+      page.getByRole("heading", { level: 1, name: route.heading }),
+    ).toBeVisible();
+
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
+      .analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+}
