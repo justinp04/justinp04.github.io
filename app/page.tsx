@@ -1,8 +1,17 @@
 import { Reveal } from "@/components/motion/reveal";
+import { AboutSummary } from "@/components/sections/about-summary";
 import { ContactPanel } from "@/components/sections/contact-panel";
+import { ExperienceTimeline } from "@/components/sections/experience-timeline";
 import { Hero } from "@/components/sections/hero";
 import { ProofPoints } from "@/components/sections/proof-points";
-import { hero, profiles, proofPoints } from "@/content/site";
+import {
+  about,
+  education,
+  experienceEntries,
+  hero,
+  profiles,
+  proofPoints,
+} from "@/content/site";
 
 export default function Home() {
   return (
@@ -15,6 +24,17 @@ export default function Home() {
       </Reveal>
       <Reveal>
         <ProofPoints items={proofPoints} />
+      </Reveal>
+      <div aria-hidden="true" data-featured-projects-boundary="pending-pm-03" />
+      <Reveal>
+        <ExperienceTimeline entries={experienceEntries} />
+      </Reveal>
+      <Reveal>
+        <AboutSummary
+          education={education}
+          location={about.location}
+          narrative={about.narrative}
+        />
       </Reveal>
       <Reveal className="pt-12 sm:pt-20">
         <ContactPanel

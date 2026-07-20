@@ -92,3 +92,34 @@ a {
     transition: none !important;
   }
 }
+
+.experience-entry {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.experience-entry::before {
+  position: absolute;
+  top: 0;
+  bottom: -2rem;
+  left: 0.3rem;
+  width: 1px;
+  background: var(--border);
+  content: "";
+}
+
+.experience-entry::after {
+  position: absolute;
+  top: 1.75rem;
+  left: 0;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 0 0 0 5px var(--background);
+  content: "";
+}
+
+.experience-entry:last-child::before {
+  bottom: calc(100% - 2.1rem);
+}

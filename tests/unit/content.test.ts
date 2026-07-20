@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { hero, navigation, profiles, proofPoints } from "@/content/site";
+import {
+  education,
+  experienceEntries,
+  hero,
+  navigation,
+  profiles,
+  proofPoints,
+} from "@/content/site";
 
 function collectStrings(value: unknown): string[] {
   if (typeof value === "string") {
@@ -49,5 +56,65 @@ describe("professional homepage content", () => {
     expect(publicContent).not.toMatch(/Facebook/i);
     expect(publicContent).not.toMatch(/general availability/i);
     expect(publicContent).not.toMatch(/user adoption/i);
+  });
+});
+
+describe("approved experience and education content", () => {
+  it("publishes the complete employer, role, and date chronology", () => {
+    expect(experienceEntries.map(({ employer, role, start, end }) => ({
+      employer,
+      role,
+      start,
+      end,
+    }))).toEqual([
+      {
+        employer: "Clew, formerly CGR",
+        role: "Full-Stack Software Engineer",
+        start: "5 March 2025",
+        end: "present",
+      },
+      {
+        employer: "AngloGold Ashanti",
+        role: "Software Engineer Intern",
+        start: "April",
+        end: "December 2024",
+      },
+      {
+        employer: "Curtin University with KK Women's and Children's Hospital",
+        role: "Software Engineering Intern",
+        start: "January",
+        end: "February 2024",
+      },
+      {
+        employer: "Jason Windows",
+        role: "Software Engineering Intern",
+        start: "October",
+        end: "December 2023",
+      },
+    ]);
+  });
+
+  it("publishes the approved education", () => {
+    expect(education).toEqual({
+      degree: "Bachelor of Computing",
+      major: "Software Engineering",
+      institution: "Curtin University",
+      completed: "2024",
+    });
+  });
+
+  it("preserves proof-of-concept and internal-production boundaries", () => {
+    const proofOfConceptEmployers = experienceEntries
+      .filter(({ outcomes }) => outcomes.some((outcome) => /proof of concept/i.test(outcome)))
+      .map(({ employer }) => employer);
+    const internalProductionEmployers = experienceEntries
+      .filter(({ outcomes }) => outcomes.some((outcome) => /internal production/i.test(outcome)))
+      .map(({ employer }) => employer);
+
+    expect(proofOfConceptEmployers).toEqual([
+      "Curtin University with KK Women's and Children's Hospital",
+      "Jason Windows",
+    ]);
+    expect(internalProductionEmployers).toEqual(["AngloGold Ashanti"]);
   });
 });

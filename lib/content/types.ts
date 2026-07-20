@@ -22,3 +22,19 @@ export interface ProofPoint {
   value: string;
   label: string;
 }
+
+export interface ExperienceEntry {
+  employer: string;
+  role: string;
+  start: string;
+  end: string;
+  location?: string;
+  outcomes: readonly string[];
+}
+
+export interface Education {
+  degree: string;
+  major: string;
+  institution: string;
+  completed: string;
+}

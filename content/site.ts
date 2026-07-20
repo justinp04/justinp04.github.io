@@ -5,6 +5,8 @@ import type {
   ProofPoint,
 } from "@/lib/content/types";
 
+export { education, experienceEntries } from "@/content/experience";
+
 export const navigation = [
   { label: "Projects", href: "/projects/" },
   { label: "Experience", href: "/#experience" },
@@ -44,3 +46,9 @@ export const proofPoints = [
       "Product direction, implementation, deployment, and ongoing delivery",
   },
 ] as const satisfies readonly ProofPoint[];
+
+export const about = {
+  narrative:
+    "Justin works product-mindedly across ambiguous ideas, product needs, technical decisions, and end-to-end delivery.",
+  location: "Perth, Western Australia",
+} as const;
