@@ -18,6 +18,26 @@ const chasecrmProject = {
   Body: () => null,
 } satisfies ProjectRecord;
 
+const seanDunnRealEstateProject = {
+  slug: "sean-dunn-real-estate",
+  name: "Sean Dunn Real Estate",
+  description:
+    "A live, conversion-focused client site using property-estimate, testimonial, and direct-contact paths to generate enquiries.",
+  timeframe: "Live client engagement",
+  status: "Live client site",
+  ownership:
+    "Sole ownership of discovery, requirements, design, implementation, deployment, maintenance, and SEO",
+  featuredOrder: 3,
+  tags: ["Client delivery", "Real estate", "SEO"],
+  links: [
+    {
+      label: "Visit the live Sean Dunn Real Estate site",
+      href: "https://www.seandunnrealestate.com/",
+    },
+  ],
+  Body: () => null,
+} satisfies ProjectRecord;
+
 describe("ProjectCard", () => {
   it("presents ChaseCRM evidence and a descriptive case-study link", () => {
     render(<ProjectCard emphasis="primary" project={chasecrmProject} />);
@@ -37,5 +57,22 @@ describe("ProjectCard", () => {
     expect(
       screen.getByRole("link", { name: "Read the ChaseCRM case study" }),
     ).toHaveAttribute("href", "/projects/chasecrm/");
+  });
+
+  it("renders a safe external project link", () => {
+    render(<ProjectCard project={seanDunnRealEstateProject} />);
+
+    const liveSiteLink = screen.getByRole("link", {
+      name: "Visit the live Sean Dunn Real Estate site",
+    });
+
+    expect(liveSiteLink).toHaveAttribute(
+      "href",
+      "https://www.seandunnrealestate.com/",
+    );
+    expect(liveSiteLink).toHaveAttribute("target", "_blank");
+    expect(liveSiteLink.getAttribute("rel")?.split(/\s+/)).toEqual(
+      expect.arrayContaining(["noopener", "noreferrer"]),
+    );
   });
 });

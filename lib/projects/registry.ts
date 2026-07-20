@@ -2,12 +2,14 @@ import type { ComponentType } from "react";
 
 import { chasecrmMetadata } from "@/content/projects/chasecrm/metadata";
 import { macromunchMetadata } from "@/content/projects/macromunch/metadata";
+import { seanDunnRealEstateMetadata } from "@/content/projects/sean-dunn-real-estate/metadata";
 import {
   projectMetadataSchema,
   type ProjectMetadata,
 } from "@/lib/projects/schema";
 import ChaseCrmBody from "../../content/projects/chasecrm/body.mdx";
 import MacroMunchBody from "../../content/projects/macromunch/body.mdx";
+import SeanDunnRealEstateBody from "../../content/projects/sean-dunn-real-estate/body.mdx";
 
 interface ProjectSource {
   metadata: unknown;
@@ -40,6 +42,7 @@ export function buildProjectRegistry(
 export const projects = buildProjectRegistry([
   { metadata: chasecrmMetadata, Body: ChaseCrmBody },
   { metadata: macromunchMetadata, Body: MacroMunchBody },
+  { metadata: seanDunnRealEstateMetadata, Body: SeanDunnRealEstateBody },
 ]);
 
 export const featuredProjects = projects;

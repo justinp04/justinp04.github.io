@@ -9,6 +9,10 @@ vi.mock("@/content/projects/macromunch/body.mdx", () => ({
   default: () => null,
 }));
 
+vi.mock("@/content/projects/sean-dunn-real-estate/body.mdx", () => ({
+  default: () => null,
+}));
+
 import {
   buildProjectRegistry,
   getProjectBySlug,
@@ -79,12 +83,29 @@ describe("project registry", () => {
     expect(projects.map(({ slug }) => slug)).toEqual([
       "chasecrm",
       "macromunch",
+      "sean-dunn-real-estate",
     ]);
     expect(getProjectBySlug("chasecrm")).toEqual(
       expect.objectContaining({ slug: "chasecrm", name: "ChaseCRM" }),
     );
     expect(getProjectBySlug("macromunch")).toEqual(
       expect.objectContaining({ slug: "macromunch", name: "MacroMunch" }),
+    );
+    expect(getProjectBySlug("sean-dunn-real-estate")).toEqual(
+      expect.objectContaining({
+        slug: "sean-dunn-real-estate",
+        name: "Sean Dunn Real Estate",
+        status: "Live client site",
+        ownership:
+          "Sole ownership of discovery, requirements, design, implementation, deployment, maintenance, and SEO",
+        featuredOrder: 3,
+        links: [
+          {
+            label: "Visit the live Sean Dunn Real Estate site",
+            href: "https://www.seandunnrealestate.com/",
+          },
+        ],
+      }),
     );
     expect(getProjectBySlug("unknown-project")).toBeUndefined();
   });

@@ -39,6 +39,11 @@ for (const route of [
     heading: "ChaseCRM",
     label: "ChaseCRM Project Case Study",
   },
+  {
+    path: "/projects/sean-dunn-real-estate/",
+    heading: "Sean Dunn Real Estate",
+    label: "Sean Dunn Real Estate Project Case Study",
+  },
 ]) {
   test(`${route.label} has no WCAG A or AA accessibility violations`, async ({
     page,
