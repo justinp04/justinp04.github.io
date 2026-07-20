@@ -26,7 +26,7 @@ Use `npm ci` when a clean, lockfile-exact installation is required.
 
 Each Project Case Study is a paired `content/projects/<slug>/metadata.ts` and `content/projects/<slug>/body.mdx`. Import both files into the explicit source list in `lib/projects/registry.ts`; files do not enter the portfolio through automatic discovery.
 
-Metadata validation requires a kebab-case `slug`, non-empty `name`, `description`, `timeframe`, `status`, and `ownership`, a positive integer `featuredOrder`, at least one non-empty `tag`, and optional links containing a non-empty label and valid absolute URL. Project slugs must be unique. Invalid metadata, duplicate slugs, or MDX compilation errors fail verification.
+Metadata validation requires a kebab-case `slug`, non-empty `name`, `description`, `timeframe`, `status`, and `ownership`, a positive integer `featuredOrder`, at least one non-empty `tag`, and optional links containing a non-empty label and valid HTTPS URL. Project slugs must be unique. Invalid metadata, duplicate slugs, or MDX compilation errors fail verification.
 
 ## 5. Author prompts
 
