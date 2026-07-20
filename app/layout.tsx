@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+import { SkipLink } from "@/components/layout/skip-link";
+import { navigation, profiles } from "@/content/site";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={GeistSans.variable}>
-      <body>{children}</body>
+      <body>
+        <SkipLink />
+        <SiteHeader navigation={navigation} profiles={profiles} />
+        {children}
+        <SiteFooter profiles={profiles} />
+      </body>
     </html>
   );
 }
